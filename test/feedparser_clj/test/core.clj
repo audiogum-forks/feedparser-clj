@@ -1,8 +1,7 @@
 (ns feedparser-clj.test.core
-  (:import [com.sun.syndication.io SyndFeedInput XmlReader]
+  (:import [com.rometools.rome.io SyndFeedInput XmlReader]
            [java.net URL]
-           [java.io InputStreamReader]
-           [com.sun.syndication.feed.synd SyndFeed])
+           [java.io InputStreamReader])
   (:require [feedparser-clj.core :refer :all :reload true]
             [clojure.test :refer :all]))
 

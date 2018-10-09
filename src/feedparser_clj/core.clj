@@ -1,8 +1,7 @@
 (ns feedparser-clj.core
-  (:import [com.sun.syndication.io SyndFeedInput XmlReader]
-           [java.net URL]
+  (:import [java.net URL]
            [java.io InputStreamReader]
-           [com.sun.syndication.feed.synd SyndFeed])
+           [com.rometools.rome.io SyndFeedInput XmlReader])
   (:gen-class))
 
 (defrecord feed [authors author categories contributors copyright description
