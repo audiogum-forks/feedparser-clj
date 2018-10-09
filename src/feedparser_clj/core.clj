@@ -2,7 +2,6 @@
   (:import [java.net URL]
            [java.io InputStreamReader]
            [com.rometools.rome.io SyndFeedInput XmlReader])
-  (:gen-class))
 
 (defrecord feed [authors author categories contributors copyright description
                  encoding entries feed-type image language link entry-links
