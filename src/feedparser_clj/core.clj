@@ -2,6 +2,7 @@
   (:import [java.net URL]
            [java.io InputStreamReader]
            [com.rometools.rome.io SyndFeedInput XmlReader])
+  (:require [clj-time.coerce :as c]))
 
 (defrecord feed [authors author categories contributors copyright description
                  encoding entries feed-type image language link entry-links
@@ -72,9 +73,9 @@
                :description    (if-let [d (.getDescription e)] (obj->content d))
                :author         (.getAuthor e)
                :link           (.getLink e)
-               :published-date (.getPublishedDate e)
+               :published-date (c/from-date (.getPublishedDate e))
                :title          (.getTitle e)
-               :updated-date   (.getUpdatedDate e)
+               :updated-date   (c/from-date (.getUpdatedDate e))
                :uri            (.getUri e)}))
 
 (defn- obj->feed
@@ -93,7 +94,7 @@
                :feed-type      (.getFeedType f)
                :language       (.getLanguage f)
                :link           (.getLink f)
-               :published-date (.getPublishedDate f)
+               :published-date (c/from-date (.getPublishedDate f))
                :title          (.getTitle f)
                :uri            (.getUri f)}))
 
@@ -101,6 +102,10 @@
   (let [feedinput (new SyndFeedInput)
         syndfeed  (.build feedinput xmlreader)]
     (obj->feed syndfeed)))
+
+(defn parse-stream
+  [input-stream]
+  (parse-internal (XmlReader. input-stream)))
 
 (defn ->url [s]
   (if (string? s) (URL. s) s))
