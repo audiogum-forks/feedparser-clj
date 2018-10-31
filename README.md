@@ -1,4 +1,3 @@
-feedparser-clj [![Build Status](https://travis-ci.org/Gonzih/feedparser-clj.svg?branch=master)](https://travis-ci.org/Gonzih/feedparser-clj)
 ==============
 
 Parse RSS/Atom feeds with a simple, clojure-friendly API.
