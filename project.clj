@@ -1,4 +1,4 @@
-(defproject audiogum/feedparser-clj "0.6.2-SNAPSHOT"
+(defproject audiogum/feedparser-clj "0.6.2"
   :description "Parse RSS/Atom feeds with a simple, clojure-friendly API."
   :dependencies [[clj-time "0.14.4"]
                  [com.rometools/rome "1.11.0"]
