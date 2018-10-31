@@ -6,10 +6,12 @@
 
 (defrecord feed [authors author categories contributors copyright description
                  encoding entries feed-type image language link entry-links
-                 published-date title uri])
+                 published-date title uri block closed-captioned keywords
+                 season summary subtitle episode-type order episode])
 
 (defrecord entry [authors author categories contents contributors description
-                  enclosures link published-date title updated-date url])
+                  enclosures link published-date title updated-date url uri block
+                  explicit subtitle keywords summary])
 
 (defrecord enclosure [length type uri])
 (defrecord person    [email name uri])
@@ -65,18 +67,30 @@
 (defn- obj->entry
   "Create feed entry struct from SyndEntry"
   [e]
-  (map->entry {:authors        (map obj->person    (seq (.getAuthors e)))
-               :categories     (map obj->category  (seq (.getCategories e)))
-               :contents       (map obj->content   (seq (.getContents e)))
-               :contributors   (map obj->person    (seq (.getContributors e)))
-               :enclosures     (map obj->enclosure (seq (.getEnclosures e)))
-               :description    (if-let [d (.getDescription e)] (obj->content d))
-               :author         (.getAuthor e)
-               :link           (.getLink e)
-               :published-date (c/from-date (.getPublishedDate e))
-               :title          (.getTitle e)
-               :updated-date   (c/from-date (.getUpdatedDate e))
-               :uri            (.getUri e)}))
+  (let [itunes-info (.getModule e "http://www.itunes.com/dtds/podcast-1.0.dtd")]
+    (map->entry {:authors          (map obj->person    (seq (.getAuthors e)))
+                 :categories       (map obj->category  (seq (.getCategories e)))
+                 :contents         (map obj->content   (seq (.getContents e)))
+                 :contributors     (map obj->person    (seq (.getContributors e)))
+                 :enclosures       (map obj->enclosure (seq (.getEnclosures e)))
+                 :description      (if-let [d (.getDescription e)] (obj->content d))
+                 :author           (or (some-> itunes-info .getAuthor) (.getAuthor e))
+                 :link             (.getLink e)
+                 :published-date   (c/from-date (.getPublishedDate e))
+                 :title            (or (some-> itunes-info .getTitle) (.getTitle e))
+                 :subtitle         (some-> itunes-info .getSubtitle)
+                 :updated-date     (c/from-date (.getUpdatedDate e))
+                 :uri              (.getUri e)
+                 :image            (if-let [i (some-> itunes-info .getImage str)]
+                                     {:url i})
+                 :block            (some-> itunes-info .getBlock)
+                 :closed-captioned (some-> itunes-info .getClosedCaptioned)
+                 :keywords         (some-> itunes-info .getKeywords seq)
+                 :summary          (some-> itunes-info .getSummary)
+                 :season           (some-> itunes-info .getSeason)
+                 :episode-type     (some-> itunes-info .getEpisodeType)
+                 :order            (some-> itunes-info .getOrder)
+                 :episode          (some-> itunes-info .getEpisode)})))
 
 (defn- obj->feed
   "Create a feed struct from a SyndFeed"
