@@ -49,6 +49,7 @@
     (testing :feed
       (is (= (-> pf :author) "Audioboom"))
       (is (= (-> pf :categories) []))
+      (is (= (-> pf :itunes-categories) ["Comedy"]))
       (is (= (-> pf :contributors) []))
       (is (= (-> pf :entry-links) []))
       (is (= (-> pf :image :url) "https://images.theabcdn.com/i/24025650.jpg"))
@@ -66,6 +67,7 @@
       (is (= (-> pf :subtitle) nil))
       (is (= (-> pf :keywords) nil))
       (is (= (-> pf :type) "episodic"))
+      (is (= (-> pf :complete) false))
       (is (re-find #"A podcast from the QI offices.*" (-> pf :summary))))
 
     (testing :entry
@@ -93,4 +95,5 @@
         (is (= (:episode-type entry) "full"))
         (is (= (:order entry) nil))
         (is (= (-> entry :image :url) "https://images.theabcdn.com/i/33781874.jpg"))
-        (is (= (:episode entry) nil))))))
+        (is (= (:episode entry) nil))
+        (is (= (:duration entry) 3444))))))
