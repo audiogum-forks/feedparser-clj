@@ -7,11 +7,11 @@
 (defrecord feed [authors author categories contributors copyright description
                  encoding entries feed-type image language link entry-links
                  published-date title uri block closed-captioned keywords
-                 season summary subtitle episode-type order episode])
+                 season summary subtitle episode-type order episode duration])
 
 (defrecord entry [authors author categories contents contributors description
                   enclosures link published-date title updated-date url uri block
-                  explicit subtitle keywords summary])
+                  explicit subtitle keywords summary type complete itunes-categories])
 
 (defrecord enclosure [length type uri])
 (defrecord person    [email name uri])
