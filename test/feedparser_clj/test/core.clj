@@ -43,3 +43,38 @@
         (is (= (:title entry) "Arch Linux on Lenovo IdeaPad Y700 15\""))
         (is (= (:updated-date entry) nil))
         (is (= (:uri entry) "http://blog.gonzih.me/blog/2015/12/11/arch-linux-on-lenovo-ideapad-y700-15/"))))))
+
+(deftest parse-itunes-podcast-feed-test
+  (let [pf (parse-feed (load-feed-fixture "fish.xml"))]
+    (testing :feed
+      (is (= (-> pf :author) nil))
+      (is (= (-> pf :categories) []))
+      (is (= (-> pf :contributors) []))
+      (is (= (-> pf :entry-links) []))
+      (is (= (-> pf :image) nil))
+      (is (= (-> pf :copyright) nil))
+      (is (re-find #"A podcast from the QI offices.*" (-> pf :description)))
+      (is (= (-> pf :encoding) nil))
+      (is (= (-> pf :feed-type) "rss_2.0"))
+      (is (= (-> pf :language) "en-us"))
+      (is (= (-> pf :link) "https://audioboom.com/channel/nosuchthingasafish"))
+      (is (= (-> pf :published-date) (t/date-time 2018 10 26 17 0 5)))
+      (is (= (-> pf :title) "No Such Thing As A Fish"))
+      (is (= (-> pf :uri) nil)))
+
+    (testing :entry
+      (is (= (-> pf :entries count) 157))
+      (let [entry (-> pf :entries first)]
+        (is (= (:authors entry) []))
+        (is (= (:categories entry) []))
+        (is (= (:contributors entry) []))
+        (is (= (-> entry :enclosures first :url) "https://audioboom.com/posts/7060991.mp3?modified=1540570766&source=rss&stitched=1"))
+        (is (= (re-find #".*Dan, James, Anna, Andy and special guest.*" (-> entry :contents first :value))))
+        (is (= "text/html" (:type (:description entry))))
+        (is (re-find #".*Dan, James, Anna, Andy and special guest.*" (:value (:description entry))))
+        (is (= (:author entry) "Audioboom"))
+        (is (= (:link entry) "https://audioboom.com/posts/7060991"))
+        (is (= (:published-date entry) (t/date-time 2018 10 26 17)))
+        (is (= (:title entry) "Episode 240: No Such Thing As An Easy Tweet"))
+        (is (= (:updated-date entry) nil))
+        (is (= (:uri entry) "tag:audioboom.com,2018-10-26:/posts/7060991"))))))
