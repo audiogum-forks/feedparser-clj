@@ -47,11 +47,11 @@
 (deftest parse-itunes-podcast-feed-test
   (let [pf (parse-feed (load-feed-fixture "fish.xml"))]
     (testing :feed
-      (is (= (-> pf :author) nil))
+      (is (= (-> pf :author) "Audioboom"))
       (is (= (-> pf :categories) []))
       (is (= (-> pf :contributors) []))
       (is (= (-> pf :entry-links) []))
-      (is (= (-> pf :image) nil))
+      (is (= (-> pf :image :url) "https://images.theabcdn.com/i/24025650.jpg"))
       (is (= (-> pf :copyright) nil))
       (is (re-find #"A podcast from the QI offices.*" (-> pf :description)))
       (is (= (-> pf :encoding) nil))
@@ -60,7 +60,12 @@
       (is (= (-> pf :link) "https://audioboom.com/channel/nosuchthingasafish"))
       (is (= (-> pf :published-date) (t/date-time 2018 10 26 17 0 5)))
       (is (= (-> pf :title) "No Such Thing As A Fish"))
-      (is (= (-> pf :uri) nil)))
+      (is (= (-> pf :uri) nil))
+      (is (= (-> pf :block) false))
+      (is (= (-> pf :explicit) false))
+      (is (= (-> pf :subtitle) nil))
+      (is (= (-> pf :keywords) nil))
+      (is (re-find #"A podcast from the QI offices.*" (-> pf :summary))))
 
     (testing :entry
       (is (= (-> pf :entries count) 157))

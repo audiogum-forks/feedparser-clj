@@ -80,28 +80,54 @@
 
 (defn- obj->feed
   "Create a feed struct from a SyndFeed"
-  [f]
-  (map->feed  {:authors        (map obj->person   (seq (.getAuthors f)))
-               :categories     (map obj->category (seq (.getCategories f)))
-               :contributors   (map obj->person   (seq (.getContributors f)))
-               :entries        (map obj->entry    (seq (.getEntries f)))
-               :entry-links    (map obj->link     (seq (.getLinks f)))
-               :image          (if-let [i (.getImage f)] (obj->image i))
-               :author         (.getAuthor f)
-               :copyright      (.getCopyright f)
-               :description    (.getDescription f)
-               :encoding       (.getEncoding f)
-               :feed-type      (.getFeedType f)
-               :language       (.getLanguage f)
-               :link           (.getLink f)
-               :published-date (c/from-date (.getPublishedDate f))
-               :title          (.getTitle f)
-               :uri            (.getUri f)}))
+  ([f]
+   (map->feed  {:authors        (map obj->person   (seq (.getAuthors f)))
+                :categories     (map obj->category (seq (.getCategories f)))
+                :contributors   (map obj->person   (seq (.getContributors f)))
+                :entries        (map obj->entry    (seq (.getEntries f)))
+                :entry-links    (map obj->link     (seq (.getLinks f)))
+                :image          (if-let [i (.getImage f)] (obj->image i))
+                :author         (.getAuthor f)
+                :copyright      (.getCopyright f)
+                :description    (.getDescription f)
+                :encoding       (.getEncoding f)
+                :feed-type      (.getFeedType f)
+                :language       (.getLanguage f)
+                :link           (.getLink f)
+                :published-date (c/from-date (.getPublishedDate f))
+                :title          (.getTitle f)
+                :uri            (.getUri f)}))
+  ([f itunes-info]
+   (map->feed  {:authors        (map obj->person   (seq (.getAuthors f)))
+                :categories     (map obj->category (seq (.getCategories f)))
+                :contributors   (map obj->person   (seq (.getContributors f)))
+                :entries        (map obj->entry    (seq (.getEntries f)))
+                :entry-links    (map obj->link     (seq (.getLinks f)))
+                :image          (if-let [itunes-image (.getImage itunes-info)] {:url (str itunes-image)}
+                                        (some-> (.getImage f) obj->image))
+                :author         (or (.getAuthor itunes-info) (.getAuthor f))
+                :copyright      (.getCopyright f)
+                :description    (.getDescription f)
+                :encoding       (.getEncoding f)
+                :feed-type      (.getFeedType f)
+                :language       (.getLanguage f)
+                :link           (.getLink f)
+                :published-date (c/from-date (.getPublishedDate f))
+                :title          (.getTitle f)
+                :uri            (.getUri f)
+                :block          (.getBlock itunes-info)
+                :explicit       (.getExplicit itunes-info)
+                :subtitle       (.getSubtitle itunes-info)
+                :keywords       (seq (.getKeywords itunes-info))
+                :summary        (.getSummary itunes-info)})))
 
 (defn- parse-internal [xmlreader]
   (let [feedinput (new SyndFeedInput)
-        syndfeed  (.build feedinput xmlreader)]
-    (obj->feed syndfeed)))
+        syndfeed  (.build feedinput xmlreader)
+        itunes-info (.getModule syndfeed "http://www.itunes.com/dtds/podcast-1.0.dtd")]
+    (if itunes-info
+      (obj->feed syndfeed itunes-info)
+      (obj->feed syndfeed))))
 
 (defn parse-stream
   [input-stream]
