@@ -65,6 +65,7 @@
       (is (= (-> pf :explicit) false))
       (is (= (-> pf :subtitle) nil))
       (is (= (-> pf :keywords) nil))
+      (is (= (-> pf :type) "episodic"))
       (is (re-find #"A podcast from the QI offices.*" (-> pf :summary))))
 
     (testing :entry

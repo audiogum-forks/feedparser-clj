@@ -118,7 +118,8 @@
                  :explicit       (some-> itunes-info .getExplicit)
                  :subtitle       (some-> itunes-info .getSubtitle)
                  :keywords       (seq (some-> itunes-info .getKeywords))
-                 :summary        (some-> itunes-info .getSummary)})))
+                 :summary        (some-> itunes-info .getSummary)
+                 :type           (some-> itunes-info .getType)})))
 
 (defn- parse-internal [xmlreader]
   (let [feedinput (new SyndFeedInput)
