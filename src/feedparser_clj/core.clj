@@ -130,7 +130,7 @@
                  :summary           (some-> itunes-info .getSummary)
                  :type              (some-> itunes-info .getType)
                  :complete          (some-> itunes-info .getComplete)
-                 :itunes-categories (some->> itunes-info .getCategories (mapcat category->categories))})))
+                 :itunes-categories (some->> itunes-info .getCategories (mapcat categories))})))
 
 (defn- parse-internal [xmlreader]
   (let [feedinput (new SyndFeedInput)
