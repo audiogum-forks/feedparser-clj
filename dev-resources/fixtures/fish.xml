@@ -18,7 +18,10 @@
 <language>en-us</language>
 <itunes:image href="https://images.theabcdn.com/i/24025650.jpg" />
 <audioboom:banner-image href="https://images.theabcdn.com/i/24025647.jpg" />
-<itunes:category text="Comedy" />
+<itunes:category text="Comedy">
+  <itunes:category text="Spoken"/>
+</itunes:category>
+<itunes:category text="News"/>
 <itunes:explicit>no</itunes:explicit>
 <itunes:summary>A podcast from the QI offices in which the writers of the hit BBC show huddle around a microphone and discuss the best things they've found out this week. Hosted by Dan Schreiber (@schreiberland) with James Harkin (@jamesharkin), Andrew Hunter Murray (@andrewhunterm), and Anna Ptaszynski (#GetAnnaOnTwitter)</itunes:summary>
 <itunes:author>Audioboom</itunes:author>

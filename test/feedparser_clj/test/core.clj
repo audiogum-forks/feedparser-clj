@@ -49,7 +49,7 @@
     (testing :feed
       (is (= (-> pf :author) "Audioboom"))
       (is (= (-> pf :categories) []))
-      (is (= (-> pf :itunes-categories) ["Comedy"]))
+      (is (= (-> pf :itunes-categories) [["Comedy" "Spoken"] ["News"]]))
       (is (= (-> pf :contributors) []))
       (is (= (-> pf :entry-links) []))
       (is (= (-> pf :image :url) "https://images.theabcdn.com/i/24025650.jpg"))

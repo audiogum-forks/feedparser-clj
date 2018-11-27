@@ -93,6 +93,14 @@
                  :episode          (some-> itunes-info .getEpisode)
                  :duration         (some-> itunes-info .getDuration .getMilliseconds (quot 1000))})))
 
+(defn- categories
+  "Return a vector of categories, each category is a vector potentially
+  of [cat sub-cat] pairs."
+  [c]
+  (if-let [subcategories (seq (.getSubcategories c))]
+    (mapv (fn [s] [(.getName c) (.getName s)]) subcategories)
+    [[(.getName c)]]))
+
 (defn- obj->feed
   "Create a feed struct from a SyndFeed"
   [f]
@@ -122,7 +130,7 @@
                  :summary           (some-> itunes-info .getSummary)
                  :type              (some-> itunes-info .getType)
                  :complete          (some-> itunes-info .getComplete)
-                 :itunes-categories (some->> itunes-info .getCategories (map str))})))
+                 :itunes-categories (some->> itunes-info .getCategories (mapcat category->categories))})))
 
 (defn- parse-internal [xmlreader]
   (let [feedinput (new SyndFeedInput)
